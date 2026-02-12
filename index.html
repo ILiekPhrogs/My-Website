@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Frug's Website</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div>
+            <p><a href="index.html">Home</a></p>
+            <p><a href="contact.html">Contact</a></p>
+            <p><a href="about.html">About</a></p>
+            <p><a href="login.html">Login</a></p>
+            <p><a href="signup.html">Sign Up</a></p>
+        </div>
+    </div>
+    <!-- All visible content goes here -->
+     <script>
+        document.getElementById("login-button").addEventListener("click", function(event) {
+            event.preventDefault();
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                //obj = JSON.parse(this.responseText);
+                //document.getElementById("display").innerHTML="<span>" +  obj["content"] + "</span>"
+                //console.log(this.responseText);
+                }
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    console.log(xhttp.responseText);
+                }
+            }
+            xhttp.open("GET", "/api/getAllUsers", true);
+            xhttp.send();
+            console.log(xhttp.responseText);
+        })
+     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>
+  

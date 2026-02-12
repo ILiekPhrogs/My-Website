@@ -1,0 +1,46 @@
+/* --- Basic Reset & Base Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Ensures padding/borders are included in element's total width/height */
+}
+
+body {
+    font-family: Arial, sans-serif; /* Sets a default font for the entire page */
+    line-height: 1.6; /* Improves readability */
+    background-color: green; /* Light grey background */
+    color: #333; /* Dark grey text color */
+    padding: 20px;
+}
+
+/* --- Typography --- */
+h1, h2, h3 {
+    margin-bottom: 15px; /* Adds space below headings */
+}
+
+p {
+    margin-bottom: 10px; /* Adds space below paragraphs */
+}
+
+a {
+    color: pink; /* Sets link color */
+    text-decoration: none; /* Removes default link underline */
+}
+
+a:hover {
+    text-decoration: underline; /* Adds underline on hover for better user experience */
+}
+
+/* --- Example Classes & IDs --- */
+.container {
+    max-width: 960px; /* Limits content width on large screens */
+    margin: auto; /* Centers the container horizontally */
+    background-color: #fff; /* White background for content area */
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
+}
+
+#header {
+    border-bottom: 2px solid pink; /* Adds a colored border to the header */
+    margin-bottom: 20px;
+}

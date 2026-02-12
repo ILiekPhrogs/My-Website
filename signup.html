@@ -7,7 +7,30 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Join me in the pond</h1>
+    <div class="container">
+        <div>
+            <p><a href="index.html">Home</a></p>
+        </div>
+    </div>
+    <div>
+        <h1>Join me in the pond</h1>
+    </div>
+    <div>
+        <form method="post" action="/user">
+            <div>
+                <label for="username">New Username</label>
+                <input type="text" name="username" placeholder="Please make in your username">
+            </div>
+            <div>
+                <label for="password">New Password</label>
+                <input type="password" name="password" placeholder="Please make your password">
+            </div>
+            <div>
+                <input id="login-button" type="submit" value="signup">
+            </div>
+        </form>
+    </div>
+
     <script src="scripts.js"></script>
 </body>
 </html>

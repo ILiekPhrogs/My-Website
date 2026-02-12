@@ -1,13 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <h1>Join me in the pond</h1>
-    <script src="scripts.js"></script>
-</body>
-</html>
+<div>
+    <h1>Sign Up</h1>
+</div>
+<div>
+    <form method="post" action="/signup">
+        <div>
+            <label for="username">Username</label>
+            <input type="text" name="username" placeholder="Create a username" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" placeholder="Create a password" required>
+        </div>
+        <div>
+            <input type="submit" value="Sign Up">
+        </div>
+    </form>
+</div>

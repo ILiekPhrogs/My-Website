@@ -3,17 +3,22 @@ import json
 import urllib
 
 routes = {
-    "index.html": {"title": "home", "body": "Welcome to Frug's Homepage"},
-    "about.html": {"title": "about", "body": "I Like Frogs"},
-    "contact.html": {"title": "contact", "body": "1234 Freddy Fazbear ln., OH 1234"},
-    "login.html": {"title": "Form Post Example", "body": open("login.html", "r").read()},
-    "signup.html":{"title": "Sign Up", "body":"Join me in the pond"},
+    "/": {"title": "home", "body": "Frug's Homepage"},
+    "/about": {"title": "about", "body": "This is what you know about Frug"},
+    "/contact": {"title": "contact", "body": "You know nothing about Frug here."},
+    "/login": {"title": "Login", "body": open("form.html").read()},
+    "/signup": {"title": "Sign Up", "body": open("signup.html").read()},
     "/user": {"title": "User Page", "body": "Welcome, ##username##!"},
-    "/api/response": "{\"message\": \"api response\"}",
-    "/api/getAllUsers": "{\"users\": [{\"username\": \"admin\", \"password\": \"admin\"}, {\"username\": \"frug\", \"password\": \"frug\"}]}"
 }
 
-users = json.load(open("users.json", "r"))["users"]
+
+with open("users.json", "r") as file:
+    users = json.load(file)["users"]
+
+def save_users():
+    with open("users.json", "w") as file:
+        json.dump({"users": users}, file, indent=4)
+
 
 class MyServer(BaseHTTPRequestHandler):
     # this method handdles all the GET requests
@@ -53,43 +58,55 @@ class MyServer(BaseHTTPRequestHandler):
         
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)    
-        kvp = post_data.decode("UTF-8").split("&")
-        for kv in kvp:
-            key, value = kv.split("=")
-            if key == "username":
-                username = value
-            if key == "password":
-                password = value
-        found = False
-        message = ""
-        for user in users:
-            if username == user["username"]:
-                print(username)
-                if password == user["password"]:
-                    found = True
-                    break
-                else:
-                    found = False
-                    message = "Invalid username or password"
-                    break
-            else:
-                found = False
-                message = "Invalid username or password"
-        if found:
-            self.send_response(200)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-            message = self.load_template("User Page", f"Welcome, {username}!")
-            self.wfile.write(bytes(message, "UTF-8"))
-            return
-        else:
+        post_data = self.rfile.read(content_length).decode("UTF-8")
+        kvp = urllib.parse.parse_qs(post_data)
+
+        username = kvp.get("username", [""])[0]
+        password = kvp.get("password", [""])[0]
+
+        # ---------- LOGIN ----------
+        if self.path == "/user":
+            for user in users:
+                if username == user["username"] and password == user["password"]:
+                    self.send_response(200)
+                    self.send_header("Content-type", "text/html")
+                    self.end_headers()
+                    body = self.load_template("User Page", f"Welcome, {username}!")
+                    self.wfile.write(bytes(body, "UTF-8"))
+                    return
+
+            # failed login
             self.send_response(301)
-            self.send_header("location", "/login?message=" + message)
+            self.send_header("location", "/login?message=Invalid username or password")
             self.end_headers()
-            # message = self.load_template("Login Page", message)
-            #self.wfile.write(bytes(message, "UTF-8"))
             return
+
+        # ---------- SIGNUP ----------
+        if self.path == "/signup":
+
+            # Check duplicate username
+            for user in users:
+                if user["username"] == username:
+                    self.send_response(301)
+                    self.send_header("location", "/signup?message=Username already exists")
+                    self.end_headers()
+                    return
+
+            # Create new user
+            new_user = {
+                "username": username,
+                "password": password
+            }
+
+            users.append(new_user)
+            save_users()   #Persist to JSON file
+
+            # Redirect to login after success
+            self.send_response(301)
+            self.send_header("location", "/login?message=Signup successful. Please login.")
+            self.end_headers()
+            return
+
         
     def load_template(self, title, body):
         with open("template.html", "r") as file:
@@ -97,6 +114,11 @@ class MyServer(BaseHTTPRequestHandler):
         message = template.replace("##title##", title)
         message = message.replace("##body##", body)
         return message
+    
+    def save_users():
+        with open("users.json", "w") as file:
+            json.dump({"users": users}, file, indent=4)
+
     
 if __name__ == "__main__":
     webServer = HTTPServer(("localhost", 8080), MyServer)
